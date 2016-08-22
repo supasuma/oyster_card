@@ -1,4 +1,4 @@
-#Oystercard Challenge#
+Oystercard Challenge
 
 Makers Academy Week 2 challenge is to set:
  - to set up the project:
