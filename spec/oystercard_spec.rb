@@ -8,6 +8,11 @@ describe Oystercard do
     it "creates an instance of the card and the balance should be zero" do
       expect(card.balance).to eq 0
     end
+
+    it "creates an in_journey instance variable with default of false" do
+      expect(card.in_journey).to eq false
+    end
+
   end
 
   describe "#top_up" do
@@ -38,14 +43,46 @@ describe Oystercard do
   end
 
   describe "#in_journey?" do
+    it "responds to method call" do
+      expect(card).to respond_to :in_journey?
+    end
 
+    it "returns false if we call it after instantiated the instance" do
+      expect(card.in_journey?).to eq false
+    end
   end
 
   describe "#touch_in" do
+    it "responds to method call" do
+      expect(card).to respond_to :touch_in
+    end
 
+    it "change the in_journey instance variable to true " do
+      card.touch_in
+      expect(card).to be_in_journey
+    end
+
+    it "raises an error when user tries to touch in when already in_journey" do
+      card.touch_in
+      expect{ card.touch_in }.to raise_error(RuntimeError)
+    end
   end
 
   describe "#touch_out" do
+    it "responds to method call" do
+      expect(card).to respond_to :touch_out
+    end
 
-  end  
+    it "changes the in_journey ivar to false" do
+      card.touch_in
+      card.touch_out
+      expect(card).not_to be_in_journey
+    end
+
+    it "raises an error when user tries to touch out when not in journey" do
+      card.touch_in
+      card.touch_out
+      expect{ card.touch_out }.to raise_error(RuntimeError)
+    end
+  end
 end
