@@ -6,6 +6,7 @@ describe Oystercard do
   subject(:other_card) {described_class.new}
 
   let(:station) {double :station}
+  let(:station2) {double :station2}
 
   before(:each) do
     card.top_up(10)
@@ -18,6 +19,10 @@ describe Oystercard do
 
     it "creates an in_journey instance variable with default of false" do
       expect(card.in_journey?).to eq false
+    end
+
+    it "creates an empty array of stations" do
+      expect(card.journeys).to be_empty
     end
 
   end
@@ -94,26 +99,36 @@ describe Oystercard do
     end
 
     it "responds to method call" do
-      expect(card).to respond_to :touch_out
+      expect(card).to respond_to(:touch_out).with(1).arguments
     end
 
     it "changes the in_journey ivar to false" do
-      card.touch_out
+      card.touch_out(station)
       expect(card).not_to be_in_journey
     end
 
     it "raises an error when user tries to touch out when not in journey" do
-      card.touch_out
-      expect{ card.touch_out }.to raise_error(RuntimeError)
+      card.touch_out(station)
+      expect{ card.touch_out(station) }.to raise_error(RuntimeError)
     end
 
-    it "deducts £1 from your card balance" do
-      expect{card.touch_out}.to change{card.balance}.by(-Oystercard::MINIMUM_CHARGE)
+    it "deducts MINIMUM_CHARGE from your card balance" do
+      expect{card.touch_out(station)}.to change{card.balance}.by(-Oystercard::MINIMUM_CHARGE)
     end
 
     it "sets entry_station ivar to nil when touching out" do
-      card.touch_out
+      card.touch_out(station)
       expect(card.entry_station).to eq nil
+    end
+
+    it "stores exit_station" do
+      card.touch_out(station2)
+      expect(card.exit_station).to eq(station2)
+    end
+
+    it "should add the entire journey into the array" do
+      card.touch_out(station2)
+      expect(card.journeys).to include({:entry_station => station, :exit_station => station2})
     end
   end
 end
