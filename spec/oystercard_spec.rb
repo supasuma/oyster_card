@@ -24,14 +24,6 @@ describe Oystercard do
     end
   end
 
-  describe '#deduct' do
-    it 'reduces balance by amount' do
-      oyster.top_up(40)
-      oyster.deduct(10)
-      expect(oyster.balance).to eq(30)
-    end
-  end
-
   describe '#touch_in' do
     it 'after touching in, in journey equals true' do
       oyster.top_up(10)
@@ -48,12 +40,18 @@ describe Oystercard do
   end
 
   describe '#touch_out' do
-
-    it 'after touching out, in journey equals false' do
+    before(:each) do
       oyster.top_up(10)
       oyster.touch_in
+    end
+
+    it 'after touching out, in journey equals false' do
       oyster.touch_out
       expect(oyster.in_journey?).to be(false)
+    end
+
+    it 'deducts minimum fare from oyster' do
+      expect {oyster.touch_out}.to change{oyster.balance}.by(-Oystercard::MIN_BALANCE)
     end
   end
 
