@@ -24,7 +24,28 @@ describe Oystercard do
       top_up_amount = Oystercard::MAXIMUM_BALANCE+1
       expect{card.top_up(top_up_amount)}.to raise_error(RuntimeError)
     end
+  end
 
+  describe "#deduct" do
+    it "responds to a method call with 1 argument" do
+      expect(card).to respond_to(:deduct).with(1).arguments
+    end
+
+    it "deducts an amount from the balance" do
+      card.top_up(20)
+      expect{card.deduct(10)}.to change(card, :balance).from(20).to(10)
+    end
+  end
+
+  describe "#in_journey?" do
 
   end
+
+  describe "#touch_in" do
+
+  end
+
+  describe "#touch_out" do
+
+  end  
 end
