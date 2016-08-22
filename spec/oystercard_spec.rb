@@ -21,7 +21,8 @@ describe Oystercard do
 
 describe '#deduct' do
   it 'deducts fair from oystercard' do
-    expect {subject.deduct 1}.to change {subject.balance}.by 1
+    subject.top_up(1)
+    expect {subject.deduct 1}.to change {subject.balance}.by -1
   end
 end
 
