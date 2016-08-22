@@ -13,7 +13,14 @@ describe Oystercard do
     it 'raises an error when top up limit is exceeded' do
       maximum_limit = Oystercard::MAXIMUM_LIMIT
       subject.top_up(maximum_limit)
-      expect{ subject.top_up 1 }.to raise_error 'Top up limited exceeded'
+      expect{ subject.top_up(1) }.to raise_error 'Top up limited exceeded'
+    end
+  end
+
+  describe '#deduct' do
+    it 'deducts journey fare by amount 10' do
+      subject.top_up(20)
+      expect { subject.deduct(10) }.to change{subject.balance}.by(-10)
     end
   end
 end

@@ -10,6 +10,10 @@ attr_reader :balance
 
   def top_up(amount)
     fail 'Top up limited exceeded' if amount + balance > MAXIMUM_LIMIT
-    @balance = amount
+    @balance += amount
+  end
+
+  def deduct(amount)
+    @balance -= amount
   end
 end
