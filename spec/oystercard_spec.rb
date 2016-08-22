@@ -3,6 +3,7 @@ require 'oystercard'
 describe Oystercard do
 
   subject(:oyster) { described_class.new }
+  let(:station) { double :station }
 
   it 'initializes with a balance of 0' do
     expect(oyster.balance).to eq(0)
@@ -25,24 +26,34 @@ describe Oystercard do
   end
 
   describe '#touch_in' do
+
     it 'after touching in, in journey equals true' do
       oyster.top_up(10)
-      oyster.touch_in
+      oyster.touch_in(station)
       expect(oyster.in_journey?).to be(true)
     end
 
     context 'balance is less than min balance' do
       it 'raises an error' do
         message = 'balance less than £1 - please top up'
-        expect{oyster.touch_in}.to raise_error message
+        expect{oyster.touch_in(station)}.to raise_error message
       end
     end
+
+    it {is_expected.to respond_to(:touch_in).with(1).argument}
+
+    it 'remembers which station entered' do
+      oyster.top_up(10)
+      oyster.touch_in(station)
+      expect(oyster.entry_station).to eq(station)
+    end
+
   end
 
   describe '#touch_out' do
     before(:each) do
       oyster.top_up(10)
-      oyster.touch_in
+      oyster.touch_in(station)
     end
 
     it 'after touching out, in journey equals false' do
