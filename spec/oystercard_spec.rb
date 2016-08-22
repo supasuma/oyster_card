@@ -36,16 +36,16 @@ describe Oystercard do
     end
   end
 
-  describe "#deduct" do
-    it "responds to a method call with 1 argument" do
-      expect(card).to respond_to(:deduct).with(1).arguments
-    end
-
-    it "deducts an amount from the balance" do
-      card.top_up(20)
-      expect{card.deduct(10)}.to change(card, :balance).from(30).to(20)
-    end
-  end
+  # describe "#deduct" do
+  #   it "responds to a method call with 1 argument" do
+  #     expect(card).to respond_to(:deduct).with(1).arguments
+  #   end
+  #
+  #   it "deducts an amount from the balance" do
+  #     card.top_up(20)
+  #     expect{card.deduct(10)}.to change(card, :balance).from(30).to(20)
+  #   end
+  # end
 
   describe "#in_journey?" do
     it "responds to method call" do
@@ -74,9 +74,9 @@ describe Oystercard do
     end
 
     it "raises an error when try to touch in with balance less than £1" do
-      amount_to_be_dedcuted = card.balance - Oystercard::MINIMUM_BALANCE + 0.1
-      card.deduct(amount_to_be_dedcuted)
-      expect{card.touch_in}.to raise_error(RuntimeError)
+      amount = Oystercard::MINIMUM_BALANCE - 0.5
+      other_card.top_up(amount)
+      expect{other_card.touch_in}.to raise_error(RuntimeError)
     end
   end
 
@@ -95,6 +95,11 @@ describe Oystercard do
       card.touch_in
       card.touch_out
       expect{ card.touch_out }.to raise_error(RuntimeError)
+    end
+
+    it "deducts £1 from your card balance" do
+      card.touch_in
+      expect{card.touch_out}.to change{card.balance}.by(-Oystercard::MINIMUM_CHARGE)
     end
   end
 end
