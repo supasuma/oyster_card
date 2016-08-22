@@ -1,0 +1,18 @@
+[31mF[0m
+
+Failures:
+
+  1) Oystercard checks defult balance of Oystercard is 0
+     [31mFailure/Error: expect(subject.check_balance).to eq 0[0m
+     [31m[0m
+     [31mNoMethodError:[0m
+     [31m  undefined method `check_balance' for #<Oystercard:0x007f91b38b3700>[0m
+     [36m# ./spec/oystercard_spec.rb:5:in `block (2 levels) in <top (required)>'[0m
+
+Finished in 0.00061 seconds (files took 0.10924 seconds to load)
+[31m1 example, 1 failure[0m
+
+Failed examples:
+
+[31mrspec ./spec/oystercard_spec.rb:4[0m [36m# Oystercard checks defult balance of Oystercard is 0[0m
+
