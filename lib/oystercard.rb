@@ -8,6 +8,7 @@ class Oystercard
   MIN_FARE = 1
 
 
+
   def initialize
     @balance = 0
     @in_journey = false
@@ -24,12 +25,15 @@ class Oystercard
 
   def touch_out
     @in_journey = false
+    deduct(MIN_FARE)
   end
 
   def top_up(value)
     fail "Your top up will exceed balance limit of #{BALANCE_LIMIT}!" if value + balance > BALANCE_LIMIT
     @balance += value
   end
+
+private
 
   def deduct(fare)
     @balance -= fare

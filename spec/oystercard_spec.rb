@@ -3,7 +3,7 @@ require 'oystercard.rb'
 
 describe Oystercard do
 
-  it 'checks defult balance of Oystercard is 0' do
+  it 'checks default balance of Oystercard is 0' do
     expect(subject.balance).to eq 0
   end
 
@@ -13,28 +13,16 @@ describe Oystercard do
   end
 
 
- context 'deduct and top-up methods' do
-
-  before do
-    subject.top_up(Oystercard::BALANCE_LIMIT)
-  end
-
     describe '#top_up' do
+
+      before do
+        subject.top_up(Oystercard::BALANCE_LIMIT)
+      end
 
       it 'will not allow a balance to exceed 90' do
         expect{ subject.top_up 1 }.to raise_error "Your top up will exceed balance limit of #{Oystercard::BALANCE_LIMIT}!"
       end
     end
-
-    describe '#deduct' do
-
-      it 'deducts fair from oystercard' do
-        expect { subject.deduct 1 }.to change { subject.balance }.by -1
-      end
-   end
-
- end
-
 
   describe '#in_journey?' do
 
@@ -58,10 +46,17 @@ describe Oystercard do
 
   describe '#touch_out' do
     it 'updates in_journey to false' do
-      subject.top_up (Oystercard::MIN_FARE)
+      subject.top_up(Oystercard::MIN_FARE)
       subject.touch_in
       subject.touch_out
       expect(subject).not_to be_in_journey
+    end
+
+    it 'updates balance by deducting fare' do
+      subject.top_up(Oystercard::MIN_FARE)
+      subject.touch_in
+      #subject.touch_out
+      expect{ subject.touch_out }.to change{ subject.balance }.by (-Oystercard::MIN_FARE)
     end
   end
 
