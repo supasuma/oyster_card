@@ -1,18 +1,28 @@
-[31mF[0m
+[32m.[0m[32m.[0m[32m.[0m[32m.[0m[31mF[0m[31mF[0m[31mF[0m
 
 Failures:
 
-  1) Oystercard checks defult balance of Oystercard is 0
-     [31mFailure/Error: expect(subject.check_balance).to eq 0[0m
-     [31m[0m
-     [31mNoMethodError:[0m
-     [31m  undefined method `check_balance' for #<Oystercard:0x007f91b38b3700>[0m
-     [36m# ./spec/oystercard_spec.rb:5:in `block (2 levels) in <top (required)>'[0m
+  1) Oystercard#in_journey? is initially not in journey
+     [31mFailure/Error: expect(subject).not_to be_in_journey[0m
+     [31m  expected #<Oystercard:0x007ffb845a76e8 @balance=0, @in_journey=false> to respond to `in_journey?`[0m
+     [36m# ./spec/oystercard_spec.rb:36:in `block (3 levels) in <top (required)>'[0m
 
-Finished in 0.00061 seconds (files took 0.10924 seconds to load)
-[31m1 example, 1 failure[0m
+  2) Oystercard#touch_in updates in_journey to true
+     [31mFailure/Error: expect(subject).to be_in_journey[0m
+     [31m  expected #<Oystercard:0x007ffb8440cc70 @balance=0, @in_journey=true> to respond to `in_journey?`[0m
+     [36m# ./spec/oystercard_spec.rb:46:in `block (3 levels) in <top (required)>'[0m
+
+  3) Oystercard#touch_out updates in_journey to false
+     [31mFailure/Error: expect(subject).not_to be_in_journey[0m
+     [31m  expected #<Oystercard:0x007ffb844060c8 @balance=0, @in_journey=false> to respond to `in_journey?`[0m
+     [36m# ./spec/oystercard_spec.rb:53:in `block (3 levels) in <top (required)>'[0m
+
+Finished in 0.01656 seconds (files took 0.08161 seconds to load)
+[31m7 examples, 3 failures[0m
 
 Failed examples:
 
-[31mrspec ./spec/oystercard_spec.rb:4[0m [36m# Oystercard checks defult balance of Oystercard is 0[0m
+[31mrspec ./spec/oystercard_spec.rb:35[0m [36m# Oystercard#in_journey? is initially not in journey[0m
+[31mrspec ./spec/oystercard_spec.rb:44[0m [36m# Oystercard#touch_in updates in_journey to true[0m
+[31mrspec ./spec/oystercard_spec.rb:51[0m [36m# Oystercard#touch_out updates in_journey to false[0m
 
