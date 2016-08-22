@@ -10,8 +10,6 @@ describe Oystercard do
 
   describe '#top_up' do
 
-    it{is_expected.to respond_to(:top_up).with(1).argument}
-
     it 'increases balance by amount' do
       oyster.top_up(10)
       expect(oyster.balance).to eq 10
@@ -20,27 +18,43 @@ describe Oystercard do
     context 'balance is greater than max limit' do
 
       it 'raises an error' do
-        message = "balance cannot exceed #{Oystercard::DEFAULT_MAX}"
+        message = "balance cannot exceed £#{Oystercard::DEFAULT_MAX}"
         expect{oyster.top_up(Oystercard::DEFAULT_MAX+10)}.to raise_error message
       end
     end
   end
 
   describe '#deduct' do
-
     it 'reduces balance by amount' do
       oyster.top_up(40)
       oyster.deduct(10)
       expect(oyster.balance).to eq(30)
     end
-
   end
 
-  it { is_expected.to respond_to(:in_journey?)}
+  describe '#touch_in' do
+    it 'after touching in, in journey equals true' do
+      oyster.top_up(10)
+      oyster.touch_in
+      expect(oyster.in_journey?).to be(true)
+    end
 
-  it 'when touching in, in journey equals true' do
-    oyster.touch_in
-    expect(oyster.in_journey?).to be(true)
+    context 'balance is less than min balance' do
+      it 'raises an error' do
+        message = 'balance less than £1 - please top up'
+        expect{oyster.touch_in}.to raise_error message
+      end
+    end
+  end
+
+  describe '#touch_out' do
+
+    it 'after touching out, in journey equals false' do
+      oyster.top_up(10)
+      oyster.touch_in
+      oyster.touch_out
+      expect(oyster.in_journey?).to be(false)
+    end
   end
 
 end
