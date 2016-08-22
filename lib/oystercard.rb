@@ -5,6 +5,7 @@ class Oystercard
   alias :in_journey? :in_journey
 
   BALANCE_LIMIT = 90
+  MIN_FARE = 1
 
 
   def initialize
@@ -17,6 +18,7 @@ class Oystercard
   # end
 
   def touch_in
+    fail 'you have insufficient funds on your oystercard' if balance < MIN_FARE
     @in_journey = true
   end
 
