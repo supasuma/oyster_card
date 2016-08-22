@@ -3,10 +3,15 @@ require 'oystercard'
 describe Oystercard do
 
   subject(:card) {described_class.new}
+  subject(:other_card) {described_class.new}
+
+  before(:each) do
+    card.top_up(10)
+  end
 
   describe "initialize" do
     it "creates an instance of the card and the balance should be zero" do
-      expect(card.balance).to eq 0
+      expect(other_card.balance).to eq 0
     end
 
     it "creates an in_journey instance variable with default of false" do
@@ -21,7 +26,7 @@ describe Oystercard do
     end
 
     it "adds an amount to the balance" do
-      card.top_up(10)
+      other_card.top_up(10)
       expect(card.balance).to eq 10
     end
 
@@ -38,7 +43,7 @@ describe Oystercard do
 
     it "deducts an amount from the balance" do
       card.top_up(20)
-      expect{card.deduct(10)}.to change(card, :balance).from(20).to(10)
+      expect{card.deduct(10)}.to change(card, :balance).from(30).to(20)
     end
   end
 
@@ -53,6 +58,7 @@ describe Oystercard do
   end
 
   describe "#touch_in" do
+
     it "responds to method call" do
       expect(card).to respond_to :touch_in
     end
@@ -65,6 +71,12 @@ describe Oystercard do
     it "raises an error when user tries to touch in when already in_journey" do
       card.touch_in
       expect{ card.touch_in }.to raise_error(RuntimeError)
+    end
+
+    it "raises an error when try to touch in with balance less than £1" do
+      amount_to_be_dedcuted = card.balance - Oystercard::MINIMUM_BALANCE + 0.1
+      card.deduct(amount_to_be_dedcuted)
+      expect{card.touch_in}.to raise_error(RuntimeError)
     end
   end
 
