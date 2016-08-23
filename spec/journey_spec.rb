@@ -33,8 +33,12 @@ let(:exit_station) { double :station }
 
   describe '#fare' do
 
-    it 'should return the minimum fare' do
+    it 'should return the minimum fare when finished journey' do
       expect(journey.fare).to eq Journey::MIN_FARE
+    end
+
+    it 'should be able to charge a penalty' do
+      expect(journey.fare).to eq Journey::PEN_FARE
     end
 
     it'should check if a journey is complete' do
