@@ -81,13 +81,18 @@ describe Oystercard do
 
   end
 
-    describe 'store journey' do
+  describe 'store journey' do
 
-      it 'checks journey was recorded' do
+    it 'it initializes with an empty list of journey by default' do
+      expect(subject.journey_log).to eq []
+    end
+
+    it 'touching in and out creates one journey' do
       oyster.top_up(10)
       oyster.touch_in(entry_station)
       oyster.touch_out(exit_station)
-      expect(subject.journey).to include(:entry_station => entry_station, :exit_station => exit_station)
+      expect(subject.journey_log).to include(:entry_station => entry_station, :exit_station => exit_station)
     end
+
   end
 end
