@@ -1,12 +1,13 @@
 class Journey
 
-attr_reader :entry_station, :exit_station
+attr_reader :entry_station, :exit_station, :current_journey
 
   MIN_FARE = 1
   PEN_FARE = 6
 
-  def initialize(entry_station)
-    @entry_station = entry_station
+  def initialize(station)
+    @entry_station = station[:entry_station]
+    @current_journey = {}
   end
 
   def finish(station)
@@ -18,7 +19,11 @@ attr_reader :entry_station, :exit_station
   end
 
   def fare
-    PEN_FARE
+    if complete? == true
+      MIN_FARE
+    else
+      PEN_FARE
+    end
   end
 
 end
