@@ -1,3 +1,6 @@
+require_relative "journey.rb"
+require_relative "station.rb"
+
 class Oystercard
   MAXIMUM_BALANCE = 90
   MINIMUM_BALANCE = 1
@@ -8,7 +11,8 @@ class Oystercard
 
   def initialize
    @balance = 0
-   @journeys = [] #Journey.new(entry_station)
+   @journeys = []
+   @journey = nil
   end
 
   def top_up(amount)
@@ -22,16 +26,23 @@ class Oystercard
 
   def touch_in(station)
     fail "Your balance is less than £1" if below_limit?
-    @in_journey = true
+    still_in_journey = in_journey?
     @entry_station = station
+    @journey = Journey.new(station, nil)
+    store_journey
+    deduct(@journey.fare) if still_in_journey
   end
 
   def touch_out(station)
-    @in_journey = false
-    deduct(MINIMUM_CHARGE)
-    @exit_station = station
-    store_journey
+    if @journey.nil?
+      @journey = Journey.new(nil, station)
+      store_journey
+    else
+      @journeys[-1].finish(station)
+    end
+    deduct(@journey.fare)
     @entry_station = nil
+    @journey = nil
   end
 
   private
@@ -44,6 +55,6 @@ class Oystercard
   end
 
   def store_journey
-    @journeys << {entry_station: entry_station, exit_station: exit_station}
+    @journeys << @journey
   end
 end

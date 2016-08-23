@@ -9,9 +9,13 @@ let(:journey2) {described_class.new(nil, station2)}
 
 
   describe "#finish" do
-    it 'returns the value of the touched out station' do
-      journey1.finish(station2)
-      expect(journey1.exit_station).to eq station2
+    #it 'returns the value of the touched out station' do
+    #  journey1.finish(station2)
+    #  expect(journey1.exit_station).to eq station2
+    #end
+
+    it "returns the journey object when exiting a journey" do
+      expect(journey1.finish(station2)).to eq journey1
     end
   end
 

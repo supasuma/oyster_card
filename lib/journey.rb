@@ -1,6 +1,6 @@
 class Journey
 
-  attr_reader :entry_station, :exit_station
+  attr_reader :entry_station#, :exit_station
   MINIMUM_CHARGE = 1
   PENALTY_CHARGE = 6
 
@@ -11,10 +11,11 @@ class Journey
 
   def finish(station)
     @exit_station = station
+    self
   end
 
   def complete?
-    !!entry_station and !!exit_station
+    !!@entry_station and !!@exit_station
   end
 
   def fare

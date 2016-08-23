@@ -7,11 +7,14 @@ describe Oystercard do
 
   let(:station1) {double :station1}
   let(:station2) {double :station2}
+  let(:Journey) {double :Journey}
   let(:journey) {double :journey}
 
   before(:each) do
     card.top_up(10)
+    allow(Journey).to receive(:new) {journey}
     allow(journey).to receive(:fare).and_return(1)
+    allow(journey).to receive(:finish).and_return(journey)
   end
 
   describe "initialize" do
@@ -30,9 +33,6 @@ describe Oystercard do
   end
 
   describe "#top_up" do
-#    it "responds to a method call with 1 argument" do
-#      expect(card).to respond_to(:top_up).with(1).arguments
-#    end
 
     it "adds an amount to the balance" do
       other_card.top_up(10)
@@ -45,37 +45,20 @@ describe Oystercard do
     end
   end
 
-  # describe "#deduct" do
-  #   it "responds to a method call with 1 argument" do
-  #     expect(card).to respond_to(:deduct).with(1).arguments
-  #   end
-  #
-  #   it "deducts an amount from the balance" do
-  #     card.top_up(20)
-  #     expect{card.deduct(10)}.to change(card, :balance).from(30).to(20)
-  #   end
-  # end
-
   describe "#in_journey?" do
-#    it "responds to method call" do
-#      expect(card).to respond_to :in_journey?
-#    end
 
     it "returns false if we call it after instantiated the instance" do
       expect(card).not_to be_in_journey
     end
-  end
 
-  describe "#touch_in" do
-
-#    it "responds to method call" do
-#      expect(card).to respond_to(:touch_in).with(1).arguments
-#    end
-
-    it "change the in_journey instance variable to true " do
+    it "returns true after touch in" do
       card.touch_in(station1)
       expect(card).to be_in_journey
     end
+
+  end
+
+  describe "#touch_in" do
 
     it "raises an error when try to touch in with balance less than £1" do
       amount = Oystercard::MINIMUM_BALANCE - 0.5
@@ -91,8 +74,14 @@ describe Oystercard do
     it "charges the penalty fare if card was not touched out" do
       card.touch_in(station1)
       final_balance = card.balance - 6
+      allow(journey).to receive(:fare) {6} #penalty charge should be returned
       card.touch_in(station1)
       expect(card.balance).to eq final_balance
+    end
+
+    it "stores an incomplete journey in journey log" do
+      card.touch_in(station1)
+      expect(card.journeys).to be_include(journey)
     end
   end
 
@@ -101,11 +90,7 @@ describe Oystercard do
       card.touch_in(station1)
     end
 
-#    it "responds to method call" do
-#      expect(card).to respond_to(:touch_out).with(1).arguments
-#    end
-
-    it "changes the in_journey ivar to false" do
+    it "called, then the #in_journey? method returns false" do
       card.touch_out(station1)
       expect(card).not_to be_in_journey
     end
@@ -119,27 +104,25 @@ describe Oystercard do
     it "charges the penalty fare" do
       card.touch_out(station2)
       final_balance = card.balance - 6
+      allow(journey).to receive(:fare) {6} #penalty charge should be returned
       card.touch_out(station2)
       expect(card.balance).to eq final_balance
     end
-
-    #it "deducts MINIMUM_CHARGE from your card balance" do
-    #  expect{card.touch_out(station1)}.to change{card.balance}.by(-Oystercard::MINIMUM_CHARGE)
-    #end
 
     it "sets entry_station ivar to nil when touching out" do
       card.touch_out(station1)
       expect(card.entry_station).to eq nil
     end
 
-    it "stores exit_station" do
+    it "stores the exit station in the journey, stored in the journey log" do
       card.touch_out(station2)
-      expect(card.exit_station).to eq(station2)
+      expect(card.journeys).to be_include(journey)
     end
 
-    it "should add the entire journey into the array" do
+    it "stores the incomplete journey in the journey log" do
       card.touch_out(station2)
-      expect(card.journeys).to include({:entry_station => station1, :exit_station => station2})
+      card.touch_out(station1)
+      expect(card.journeys).to be_include(journey)
     end
   end
 end
