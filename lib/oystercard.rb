@@ -2,7 +2,7 @@ require_relative 'station.rb'
 
 class Oystercard
 
-  attr_reader :balance, :entry_station, :exit_station
+  attr_reader :balance, :entry_station, :exit_station, :journeys
   attr_accessor :in_journey
   alias :in_journey? :in_journey
 
@@ -14,7 +14,7 @@ class Oystercard
     @in_journey = false
     @entry_station = nil
     @exit_station = nil
-    #@journey_history = [@entry_station: @exit_station]
+    @journeys = []
   end
 
   def touch_in(station)
@@ -27,8 +27,10 @@ class Oystercard
   def touch_out(station)
     deduct(MIN_FARE)
     @exit_station = station
+    @journeys << {:entry_station => @entry_station, :exit_station => @exit_station}
     @entry_station = nil
     in_journey?
+
   end
 
   def in_journey?

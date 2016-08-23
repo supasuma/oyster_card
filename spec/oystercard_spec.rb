@@ -5,6 +5,7 @@ describe Oystercard do
 
   subject(:oystercard) { described_class.new }
   let(:station) { double :station }
+  let(:station2) { double :station2 }
 
   it 'checks default balance of Oystercard is 0' do
     expect(oystercard.balance).to eq 0
@@ -61,23 +62,26 @@ describe Oystercard do
   describe '#touch_out(station)' do
     before do
       oystercard.top_up(Oystercard::MIN_FARE)
+      oystercard.touch_in(station)
     end
 
     it 'updates in_journey to false' do
-      oystercard.touch_in(station)
       oystercard.touch_out(station)
       expect(oystercard).not_to be_in_journey
     end
 
     it 'updates balance by deducting fare' do
-      oystercard.touch_in(station)
       expect{ oystercard.touch_out(station) }.to change{ oystercard.balance }.by (-Oystercard::MIN_FARE)
     end
 
     it 'updates & stores exit_station' do
-      oystercard.touch_in(station)
       oystercard.touch_out(station)
-      expect(subject.exit_station).to eq station
+      expect(oystercard.exit_station).to eq station
+    end
+
+    it 'stores journey as a hash in array' do
+      oystercard.touch_out(station2)
+      expect(oystercard.journeys).to eq [{entry_station: station, exit_station: station2}]
     end
 
   end
