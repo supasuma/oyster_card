@@ -4,6 +4,8 @@ describe Oystercard do
 
   subject(:oyster) { described_class.new }
   let(:station) { double :station }
+  let(:entry_station){double :station}
+  let(:exit_station){double :station}
 
   it 'initializes with a balance of 0' do
     expect(oyster.balance).to eq(0)
@@ -64,12 +66,12 @@ describe Oystercard do
     end
 
     it 'after touching out, in journey equals false' do
-      oyster.touch_out
+      oyster.touch_out(station)
       expect(oyster.in_journey?).to be(false)
     end
 
     it 'deducts minimum fare from oyster' do
-      expect {oyster.touch_out}.to change{oyster.balance}.by(-Oystercard::MIN_BALANCE)
+      expect {oyster.touch_out(station)}.to change{oyster.balance}.by(-Oystercard::MIN_BALANCE)
     end
 
     it 'remembers which station exited' do
@@ -79,4 +81,13 @@ describe Oystercard do
 
   end
 
+    describe 'store journey' do
+
+      it 'checks journey was recorded' do
+      oyster.top_up(10)
+      oyster.touch_in(entry_station)
+      oyster.touch_out(exit_station)
+      expect(subject.journey[-1]).to include(:entry_station => entry_station, :exit_station => exit_station)
+    end
+  end
 end
