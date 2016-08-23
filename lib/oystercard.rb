@@ -20,14 +20,12 @@ class Oystercard
   end
 
   def touch_in(station)
-    fail "You're already touched in!" if in_journey?
     fail "Your balance is less than £1" if below_limit?
     @in_journey = true
     @entry_station = station
   end
 
   def touch_out(station)
-    fail "You're already touched out!" if !in_journey?
     @in_journey = false
     deduct(MINIMUM_CHARGE)
     @exit_station = station

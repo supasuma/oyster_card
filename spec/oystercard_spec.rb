@@ -28,9 +28,9 @@ describe Oystercard do
   end
 
   describe "#top_up" do
-    it "responds to a method call with 1 argument" do
-      expect(card).to respond_to(:top_up).with(1).arguments
-    end
+#    it "responds to a method call with 1 argument" do
+#      expect(card).to respond_to(:top_up).with(1).arguments
+#    end
 
     it "adds an amount to the balance" do
       other_card.top_up(10)
@@ -55,29 +55,24 @@ describe Oystercard do
   # end
 
   describe "#in_journey?" do
-    it "responds to method call" do
-      expect(card).to respond_to :in_journey?
-    end
+#    it "responds to method call" do
+#      expect(card).to respond_to :in_journey?
+#    end
 
     it "returns false if we call it after instantiated the instance" do
-      expect(card.in_journey?).to eq false
+      expect(card).not_to be_in_journey
     end
   end
 
   describe "#touch_in" do
 
-    it "responds to method call" do
-      expect(card).to respond_to(:touch_in).with(1).arguments
-    end
+#    it "responds to method call" do
+#      expect(card).to respond_to(:touch_in).with(1).arguments
+#    end
 
     it "change the in_journey instance variable to true " do
       card.touch_in(station)
       expect(card).to be_in_journey
-    end
-
-    it "raises an error when user tries to touch in when already in_journey" do
-      card.touch_in(station)
-      expect{ card.touch_in(station) }.to raise_error(RuntimeError)
     end
 
     it "raises an error when try to touch in with balance less than £1" do
@@ -98,18 +93,13 @@ describe Oystercard do
       card.touch_in(station)
     end
 
-    it "responds to method call" do
-      expect(card).to respond_to(:touch_out).with(1).arguments
-    end
+#    it "responds to method call" do
+#      expect(card).to respond_to(:touch_out).with(1).arguments
+#    end
 
     it "changes the in_journey ivar to false" do
       card.touch_out(station)
       expect(card).not_to be_in_journey
-    end
-
-    it "raises an error when user tries to touch out when not in journey" do
-      card.touch_out(station)
-      expect{ card.touch_out(station) }.to raise_error(RuntimeError)
     end
 
     it "deducts MINIMUM_CHARGE from your card balance" do
