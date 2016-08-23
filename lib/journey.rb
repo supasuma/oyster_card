@@ -2,7 +2,7 @@ class Journey
 
 attr_reader :entry_station, :exit_station
 
-
+  MIN_FARE = 1
 
   def initialize(entry_station)
     @entry_station = entry_station
@@ -14,7 +14,7 @@ attr_reader :entry_station, :exit_station
   end
 
   def fare
-    1
+    MIN_FARE
   end
 
 end

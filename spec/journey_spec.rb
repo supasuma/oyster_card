@@ -36,5 +36,10 @@ let(:exit_station) { double :station }
     it 'should return the minimum fare' do
       expect(journey.fare).to eq Journey::MIN_FARE
     end
+
+    it'should check if a journey is complete' do
+      journey.finish(exit_station)
+      expect(journey.complete?).to eq true
+    end
   end
 end
