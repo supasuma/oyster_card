@@ -4,7 +4,8 @@ describe Oystercard do
 
   subject(:empty_card) { described_class.new }
   subject(:card) { described_class.new }
-  let(:entry) { double :station }
+
+  let(:entry_station) { double :station }
   let(:exit) { double :station }
 
   before do
@@ -32,24 +33,24 @@ describe Oystercard do
 
     it 'raises error if balance is less than minimum required' do
       msg = "Insufficient funds. Please top up."
-      expect{ empty_card.touch_in(entry) }.to raise_error msg
+      expect{ empty_card.touch_in(entry_station) }.to raise_error msg
     end
 
     it 'returns true when card touched in' do
-      card.touch_in(entry)
+      card.touch_in(entry_station)
       expect(card).to be_in_journey
     end
 
     it 'record entry station upon touch in' do
-      card.touch_in(entry)
-      expect(card.entry_station).to eq entry
+      card.touch_in(entry_station)
+      expect(card.entry_station).to eq entry_station
     end
   end
 
   describe '#touch_out' do
 
     before(:each) do
-      card.touch_in(entry)
+      card.touch_in(entry_station)
       card.touch_out(exit)
     end
 
@@ -74,13 +75,13 @@ describe Oystercard do
   end
 
   describe '#journeys' do
-    let(:journey){ {entry_station: entry, exit_station: exit} }
+    let(:journey){ {entry_station: entry_station, exit_station: exit} }
     it 'Has an empty list of journeys by default' do
       expect(card.journeys).to be_empty
     end
 
     it 'records a journey' do
-      card.touch_in(entry)
+      card.touch_in(entry_station)
       card.touch_out(exit)
       expect(card.journeys).to include journey
     end
