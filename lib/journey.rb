@@ -7,10 +7,11 @@ attr_reader :entry_station, :exit_station, :current_journey
 
   def initialize(station)
     @entry_station = station[:entry_station]
-    @current_journey = {}
+    @current_journey = station
   end
 
   def finish(station)
+    @current_journey[:exit_station] = station[:exit_station]
     @exit_station = station
   end
 

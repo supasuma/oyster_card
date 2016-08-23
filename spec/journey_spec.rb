@@ -21,7 +21,8 @@ let(:station) { double :station }
     end
 
     it 'should record the current journey' do
-      expect(journey.current_journey).to include(:entry_station => station, :exit_station => station)
+      journey.finish({:exit_station => station})
+      expect(journey.current_journey).to eq(:entry_station => station, :exit_station => station)
     end
 
   end
