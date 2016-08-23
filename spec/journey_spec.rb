@@ -34,7 +34,7 @@ let(:exit_station) { double :station }
   describe '#fare' do
 
     it 'should return the minimum fare' do
-      expect(journey.fare).to eq 1
+      expect(journey.fare).to eq Journey::MIN_FARE
     end
   end
 end
