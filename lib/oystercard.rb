@@ -3,7 +3,7 @@ class Oystercard
 MAXIMUM_LIMIT = 90
 MINIMUM_LIMIT = 1
 
-attr_reader :balance , :entry_station, :exit_station, :journeys
+attr_reader :balance , :entry_station, :journeys
 
   def initialize
     @balance = 0
@@ -27,9 +27,7 @@ attr_reader :balance , :entry_station, :exit_station, :journeys
 
   def touch_out(exit_station)
     deduct(MINIMUM_LIMIT)
-    @exit_station = exit_station
     journeys << { entry_station: entry_station, exit_station: exit_station }
-
     @entry_station = nil
   end
 
