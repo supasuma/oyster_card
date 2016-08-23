@@ -3,63 +3,83 @@ require 'oystercard.rb'
 
 describe Oystercard do
 
+  subject(:oystercard) { described_class.new }
+  let(:station) { double :station }
+
   it 'checks default balance of Oystercard is 0' do
-    expect(subject.balance).to eq 0
+    expect(oystercard.balance).to eq 0
   end
 
+  describe '#top_up' do
 
-  it 'adds money to my oyster card' do
-    expect{ subject.top_up 1 }.to change{ subject.balance }.by 1
-  end
-
-
-    describe '#top_up' do
-
-      before do
-        subject.top_up(Oystercard::BALANCE_LIMIT)
-      end
-
-      it 'will not allow a balance to exceed 90' do
-        expect{ subject.top_up 1 }.to raise_error "Your top up will exceed balance limit of #{Oystercard::BALANCE_LIMIT}!"
-      end
+    before do
+      oystercard.top_up(Oystercard::BALANCE_LIMIT)
     end
+
+    it 'will not allow a balance to exceed 90' do
+      expect{ oystercard.top_up 1 }.to raise_error "Your top up will exceed balance limit of #{Oystercard::BALANCE_LIMIT}!"
+    end
+
+    # it 'adds money to my oyster card' do
+    #   expect{ oystercard.top_up 1 }.to change{ oystercard.balance }.by 1
+    # end
+
+  end
 
   describe '#in_journey?' do
 
     it 'is initially not in journey' do
-      expect(subject).not_to be_in_journey
+      expect(oystercard).not_to be_in_journey
     end
 
   end
 
-  describe '#touch_in' do
+  describe '#touch_in(station)' do
+
+    before do
+      oystercard.top_up(Oystercard::MIN_FARE)
+    end
+
     it 'raises an error if minimum balance on oystercard is less than 1' do
-      expect{subject.touch_in}.to raise_error 'you have insufficient funds on your oystercard'
+      oystercard.touch_in(station)
+      oystercard.touch_out(station)
+      expect{oystercard.touch_in(station)}.to raise_error 'you have insufficient funds on your oystercard'
     end
 
     it 'updates in_journey to true' do
-      subject.top_up (Oystercard::MIN_FARE)
-      subject.touch_in
-      expect(subject).to be_in_journey
+      oystercard.touch_in(station)
+      expect(oystercard).to be_in_journey
     end
+
+    it 'updates & stores entry_station' do
+      oystercard.touch_in(station)
+      expect(subject.entry_station).to eq station
+    end
+
   end
 
-  describe '#touch_out' do
+  describe '#touch_out(station)' do
+    before do
+      oystercard.top_up(Oystercard::MIN_FARE)
+    end
+
     it 'updates in_journey to false' do
-      subject.top_up(Oystercard::MIN_FARE)
-      subject.touch_in
-      subject.touch_out
-      expect(subject).not_to be_in_journey
+      oystercard.touch_in(station)
+      oystercard.touch_out(station)
+      expect(oystercard).not_to be_in_journey
     end
 
     it 'updates balance by deducting fare' do
-      subject.top_up(Oystercard::MIN_FARE)
-      subject.touch_in
-      #subject.touch_out
-      expect{ subject.touch_out }.to change{ subject.balance }.by (-Oystercard::MIN_FARE)
+      oystercard.touch_in(station)
+      expect{ oystercard.touch_out(station) }.to change{ oystercard.balance }.by (-Oystercard::MIN_FARE)
     end
+
+    it 'updates & stores exit_station' do
+      oystercard.touch_in(station)
+      oystercard.touch_out(station)
+      expect(subject.exit_station).to eq station
+    end
+
   end
-
-
 
 end
