@@ -22,7 +22,7 @@ describe Oystercard do
         message = "balance cannot exceed £#{Oystercard::DEFAULT_MAX}"
         expect{oyster.top_up(Oystercard::DEFAULT_MAX+10)}.to raise_error message
       end
-      
+
     end
 
   end
@@ -70,6 +70,11 @@ describe Oystercard do
 
     it 'deducts minimum fare from oyster' do
       expect {oyster.touch_out}.to change{oyster.balance}.by(-Oystercard::MIN_BALANCE)
+    end
+
+    it 'remembers which station exited' do
+      oyster.touch_out(station)
+      expect(oyster.exit_station).to eq(station)
     end
 
   end
