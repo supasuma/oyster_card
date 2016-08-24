@@ -32,12 +32,9 @@ class Oystercard
   end
 
   def touch_out(station)
-    #@exit_station = station
     @journey_log[-1].finish(station)
     amount = @journey.fare
-    puts @journey_log
     deduct(amount)
-
     @entry_station = nil
   end
 
