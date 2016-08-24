@@ -54,6 +54,11 @@ describe Oystercard do
         expect(oyster.journey_log).to include(journey)
       end
 
+      it 'deducts penalty fare for incomplete journey' do
+        oyster.touch_in(entry_station)
+        expect {oyster.touch_in(station)}.to change{oyster.balance}.by(-6)
+      end
+
     end
 
     context 'balance is less than min balance' do
