@@ -68,22 +68,22 @@ describe Oystercard do
 
   end
 
-  describe '#in_journey' do
-    it 'card initializes with not in journey' do
-      expect(card.in_journey?).to be false
-    end
-  end
-
-  describe '#journeys' do
-    let(:journey){ {entry_station: entry_station, exit_station: exit} }
-    it 'Has an empty list of journeys by default' do
-      expect(card.journeys).to be_empty
-    end
-
-    it 'records a journey' do
-      card.touch_in(entry_station)
-      card.touch_out(exit)
-      expect(card.journeys).to include journey
-    end
-  end
+  # describe '#in_journey' do
+  #   it 'card initializes with not in journey' do
+  #     expect(card.in_journey?).to be false
+  #   end
+  # end
+  #
+  # describe '#journeys' do
+  #   let(:journey){ {entry_station: entry_station, exit_station: exit} }
+  #   it 'Has an empty list of journeys by default' do
+  #     expect(card.journeys).to be_empty
+  #   end
+  #
+  #   it 'records a journey' do
+  #     card.touch_in(entry_station)
+  #     card.touch_out(exit)
+  #     expect(card.journeys).to include journey
+  #   end
+  # end
 end

@@ -5,4 +5,20 @@ require 'journey'
 
 describe Journey do
 
+  subject(:journey) { described_class.new ("Bank") }
+  let(:card) { double :oystercard }
+
+  describe '#initialize' do
+    it 'initializes with an recorded entry station' do
+      expect(journey.entry_station).to eq "Bank"
+    end
+  end
+
+  describe '#finish_journey' do
+    it 'records total journey' do
+      expect(journey.finish_journey("Aldgate")).to eq({ :entry_station => "Bank" , :exit_station => "Aldgate" })
+    end
+  end
+
+
 end
