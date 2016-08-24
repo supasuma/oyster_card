@@ -1,3 +1,5 @@
+#Creates the current journey and assigns corresponding fare.
+
 class Journey
 
   attr_reader :entry_station

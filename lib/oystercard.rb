@@ -1,5 +1,7 @@
 require_relative 'journey'
 
+#Maintains a balance through touch in & touch out. Also records journey history, soon to be pulled out.
+
 class Oystercard
 
 MAXIMUM_LIMIT = 90
@@ -21,7 +23,6 @@ attr_reader :balance , :journey, :journeys
   def touch_in(entry_station)
     fail "Insufficient funds. Please top up." if balance < MINIMUM_LIMIT
     check(entry_station)
-    #@entry_station = entry_station
   end
 
   def touch_out(exit_station)

@@ -1,13 +1,9 @@
 require 'journey'
 
-# Let's create a new Journey class, it should be responsible for starting a journey, finishing a journey,
-# calculating the fare of a journey, and returning whether or not the journey is complete.
-
 describe Journey do
 
   subject(:journey) { described_class.new ("Bank") }
   subject(:journey_nil) {described_class.new}
-  let(:card) { double :oystercard }
 
   describe '#initialize' do
     it 'initializes with an recorded entry station' do

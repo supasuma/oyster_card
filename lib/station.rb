@@ -1,3 +1,5 @@
+#Assigns station for log in/out. Currently not in full use.
+
 class Station
 
 attr_reader :name, :zone
