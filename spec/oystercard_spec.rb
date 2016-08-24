@@ -3,9 +3,12 @@ require 'oystercard'
 describe Oystercard do
 
   subject(:oyster) { described_class.new }
+
   let(:station) { double :station }
-  let(:entry_station){double :station}
-  let(:exit_station){double :station}
+  let(:entry_station) { double :station }
+  let(:exit_station) { double :station }
+  let(:Journey) { double :Journey }
+  let(:journey) { double :journey }
 
   it 'initializes with a balance of 0' do
     expect(oyster.balance).to eq(0)
@@ -43,6 +46,19 @@ describe Oystercard do
       it 'remembers which station entered' do
         oyster.touch_in(station)
         expect(oyster.entry_station).to eq(station)
+      end
+
+      # it 'creates a new instance of Journey class' do
+      #   allow(Journey).to receive(:new).and_return(journey)
+      #   oyster.touch_in(station)
+      #   expect(Journey).to receive(:new)
+      # end
+
+      it 'adds new journey to array of journeys' do
+        allow(Journey).to receive(:new).and_return(journey)
+        
+        oyster.touch_in(station)
+        expect(oyster.journey_log).to include(journey)
       end
 
     end
