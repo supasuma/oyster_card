@@ -3,12 +3,13 @@ require 'journey'
 describe Journey do
 
 subject(:journey) { described_class.new(station1, nil) }
+subject(:journey2) { described_class.new(nil, station2)}
 let(:station1) { double :station1 }
 let(:station2) { double :station2 }
 
   describe '#given an entry station' do
 
-    it 'should have an entry station' do
+    it 'should record the entry station' do
       expect(journey.entry_station).to eq station1
     end
 
@@ -40,9 +41,21 @@ let(:station2) { double :station2 }
 
   end
 
-    it'should check if a journey is complete' do
+  describe '#complete?' do
+
+    it'should return true if exit station exits' do
       journey.finish(station2)
       expect(journey).to be_complete
     end
+
+    it 'should return false if no exit station' do
+      expect(journey).not_to be_complete
+    end
+
+    it 'should return false if no entry station' do
+      expect(journey2).not_to be_complete
+    end
+
+  end
 
 end
