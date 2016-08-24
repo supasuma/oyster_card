@@ -48,15 +48,8 @@ describe Oystercard do
         expect(oyster.entry_station).to eq(station)
       end
 
-      # it 'creates a new instance of Journey class' do
-      #   allow(Journey).to receive(:new).and_return(journey)
-      #   oyster.touch_in(station)
-      #   expect(Journey).to receive(:new)
-      # end
-
       it 'adds new journey to array of journeys' do
         allow(Journey).to receive(:new).and_return(journey)
-        
         oyster.touch_in(station)
         expect(oyster.journey_log).to include(journey)
       end
@@ -79,6 +72,8 @@ describe Oystercard do
     before(:each) do
       oyster.top_up(10)
       oyster.touch_in(station)
+      allow(Journey).to receive(:new).and_return(journey)
+      #allow(journey).to receive(:fare).and_return(1)
     end
 
     it 'after touching out, in journey equals false' do
@@ -86,13 +81,8 @@ describe Oystercard do
       expect(oyster.in_journey?).to be(false)
     end
 
-    it 'deducts minimum fare from oyster' do
-      expect {oyster.touch_out(station)}.to change{oyster.balance}.by(-Oystercard::MIN_BALANCE)
-    end
-
-    it 'remembers which station exited' do
-      oyster.touch_out(station)
-      expect(oyster.exit_station).to eq(station)
+    it 'deducts minimum fare as calculated in journey class' do
+      expect {oyster.touch_out(station)}.to change{oyster.balance}.by(-1)
     end
 
   end
@@ -104,10 +94,13 @@ describe Oystercard do
     end
 
     it 'touching in and out creates one journey' do
+      allow(Journey).to receive(:new).and_return(journey)
+      allow(journey).to receive(:finish).and_return(journey)
+      allow(journey).to receive(:fare).and_return(1)
       oyster.top_up(10)
       oyster.touch_in(entry_station)
       oyster.touch_out(exit_station)
-      expect(subject.journey_log).to include(:entry_station => entry_station, :exit_station => exit_station)
+      expect(oyster.journey_log).to include(journey)
     end
 
   end

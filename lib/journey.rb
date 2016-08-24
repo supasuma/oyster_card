@@ -2,7 +2,7 @@ class Journey
 
 attr_reader :entry_station, :exit_station
 
-  MIN_FARE = 1
+  MIN_FARE = 2
   PEN_FARE = 6
 
   def initialize(entry_station, exit_station)
