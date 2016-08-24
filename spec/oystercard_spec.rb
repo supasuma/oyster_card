@@ -6,7 +6,7 @@ describe Oystercard do
   subject(:card) { described_class.new }
 
   let(:entry_station) { double :station }
-  let(:exit) { double :station }
+  let(:exit_station) { double :station }
 
   before do
     card.top_up(20)
@@ -30,60 +30,57 @@ describe Oystercard do
   end
 
   describe '#touch_in' do
-
     it 'raises error if balance is less than minimum required' do
       msg = "Insufficient funds. Please top up."
       expect{ empty_card.touch_in(entry_station) }.to raise_error msg
     end
 
-    it 'returns true when card touched in' do
-      card.touch_in(entry_station)
-      expect(card).to be_in_journey
+    it 'initiates a journey on touching in' do
+      expect(card.touch_in(entry_station)).to eq card.journey
     end
 
-    it 'record entry station upon touch in' do
-      card.touch_in(entry_station)
-      expect(card.entry_station).to eq entry_station
+    context 'touching in when previous journey is incomplete' do
+      it 'charges penalty fare to the balance' do
+        card.touch_in(entry_station)
+        expect{card.touch_in(entry_station)}.to change {card.balance}.by(-6)
+      end
+
+      it 'add a incomplete journey to journey history' do
+        card.touch_in(entry_station)
+        card.touch_in(entry_station)
+        expect(card.journeys).to include({ :entry_station => entry_station , :exit_station => nil })
+      end
     end
+
   end
 
   describe '#touch_out' do
 
     before(:each) do
       card.touch_in(entry_station)
-      card.touch_out(exit)
+      card.touch_out(exit_station)
     end
 
-    it 'returns true when card touched out' do
-      expect(card).to_not be_in_journey
+    it 'deducts normal journey fare when touching out' do
+      card.touch_in(entry_station)
+      expect { card.touch_out(exit_station)}.to change { card.balance }.by( -Oystercard::MINIMUM_LIMIT)
     end
 
-    it 'deducts fare when touching out' do
-      expect { card.touch_out(exit)}.to change { card.balance }.by( -Oystercard::MINIMUM_LIMIT)
-    end
 
     it 'forgets entry_station on touch out' do
-      expect(card.entry_station).to eq nil
+      expect(card.journey).to eq nil
+    end
+
+    context 'touching out when card has not been touched in' do
+      it 'charges a penalty fare to the balance' do
+        expect{card.touch_out(exit_station)}.to change {card.balance}.by(-6)
+      end
+
+      it 'records incomplete journey in journey history' do
+        card.touch_out(exit_station)
+        expect(card.journeys).to include({ :entry_station => nil , :exit_station => exit_station })
+      end
     end
 
   end
-
-  # describe '#in_journey' do
-  #   it 'card initializes with not in journey' do
-  #     expect(card.in_journey?).to be false
-  #   end
-  # end
-  #
-  # describe '#journeys' do
-  #   let(:journey){ {entry_station: entry_station, exit_station: exit} }
-  #   it 'Has an empty list of journeys by default' do
-  #     expect(card.journeys).to be_empty
-  #   end
-  #
-  #   it 'records a journey' do
-  #     card.touch_in(entry_station)
-  #     card.touch_out(exit)
-  #     expect(card.journeys).to include journey
-  #   end
-  # end
 end
