@@ -33,9 +33,15 @@ class Oystercard
   end
 
   def touch_out(station)
-    @journey_log[-1].finish(station)
-    deduct(@journey.fare)
-    @entry_station = nil
+    if !in_journey?
+      @journey = Journey.new(nil, station)
+      deduct(@journey.fare)
+      @journey_log << @journey
+    else
+      @journey_log[-1].finish(station)
+      deduct(@journey.fare)
+      @entry_station = nil
+    end
   end
 
   private

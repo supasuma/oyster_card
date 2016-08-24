@@ -90,6 +90,12 @@ describe Oystercard do
       expect {oyster.touch_out(station)}.to change{oyster.balance}.by(-1)
     end
 
+    it 'deducts a penalty fare as calculated in journey class' do
+      allow(journey).to receive(:fare).and_return(6)
+      oyster.touch_out(station)
+      expect {oyster.touch_out(station)}.to change{oyster.balance}.by(-6)
+    end
+
   end
 
   describe 'store journey' do
