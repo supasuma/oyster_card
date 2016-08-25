@@ -15,10 +15,26 @@ describe JourneyLog do
   end
 
   describe '#finish' do
+
+    let(:completed_journey) { double :journey , entry_station: "Bank", exit_station: "Aldgate"}
+
     it 'records total journey' do
-      journey_log.start(entry_station)
-      expect(journey_log.finish(exit_station)).to eq({ :entry_station => entry_station , :exit_station => exit_station })
+      journey_log.start("Bank")
+      journey_log.finish("Aldgate")
+      expect(journey_log.journey_history).to include(completed_journey)
     end
+
+    xit 'records journey when touch out skipped' do
+      journey_log.start(entry_station)
+      journey_log.start(entry_station)
+      expect(journey_log.journey_history).to include(journey)
+    end
+
+    xit 'records journey when touch in skipped' do
+      journey_log.finish(exit_station)
+      expect(journey_log.journey_history).to include(journey)
+    end
+
   end
 
 
