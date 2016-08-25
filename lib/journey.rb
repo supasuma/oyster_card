@@ -18,11 +18,11 @@ class Journey
   end
 
   def fare
-    if @exit_station == nil || @entry_station == nil
-      PENALTY_FARE
-    else
-      MINIMUM_FARE
-    end
+    complete? ? MINIMUM_FARE : PENALTY_FARE
+  end
+
+  def complete?
+    !!@exit_station && !!@entry_station
   end
 
 end
