@@ -28,6 +28,7 @@ describe Journey do
     end
 
     it "charges penalty fare on missing entry station" do
+      journey_nil.finish_journey("Aldgate")
       expect(journey_nil.fare).to eq(Journey::PENALTY_FARE)
     end
   end
