@@ -4,7 +4,8 @@ describe JourneyLog do
 
   subject(:journey_log) { described_class.new(journey_class: journey_class) }
   let(:journey_class) { double :journey_class, new: journey }
-  let(:journey) { double :journey }
+  let(:journey) { double :journey, entry_station: entry_station, exit_station: exit_station }
+  # let(:journey) { double :journey }
   let(:entry_station) { double :station }
   let(:exit_station) { double :station }
 
@@ -16,14 +17,14 @@ describe JourneyLog do
 
   describe '#finish' do
 
-    let(:completed_journey) { double :completed_journey, entry_station: "Bank", exit_station: "Aldgate"}
 
     it 'records total journey' do
-      #allow(:journey).to receive(:finish)#.and_return("Aldgate")
-      journey_log2 = JourneyLog.new
-      journey_log2.start_journey("Bank")
-      journey_log2.finish_journey("Aldgate")
-      expect(journey_log2.journey_history).to include(completed_journey)
+
+      allow(journey).to receive(:finish).and_return(exit_station)
+
+      journey_log.start_journey(entry_station)
+      journey_log.finish_journey(exit_station)
+      expect(journey_log.journey_history).to include(journey)
     end
 
     xit 'records journey when touch out skipped' do
@@ -38,7 +39,6 @@ describe JourneyLog do
     end
 
   end
-
 
 
 end
