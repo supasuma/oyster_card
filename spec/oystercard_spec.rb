@@ -45,11 +45,11 @@ describe Oystercard do
         expect{card.touch_in(entry_station)}.to change {card.balance}.by(-6)
       end
 
-      it 'add a incomplete journey to journey history' do
-        card.touch_in(entry_station)
-        card.touch_in(entry_station)
-        expect(card.journeys).to include({ :entry_station => entry_station , :exit_station => nil })
-      end
+      # it 'add a incomplete journey to journey history' do
+      #   card.touch_in(entry_station)
+      #   card.touch_in(entry_station)
+      #   expect(card.journeys).to include({ :entry_station => entry_station , :exit_station => nil })
+      # end
     end
 
   end
@@ -76,10 +76,10 @@ describe Oystercard do
         expect{card.touch_out(exit_station)}.to change {card.balance}.by(-6)
       end
 
-      it 'records incomplete journey in journey history' do
-        card.touch_out(exit_station)
-        expect(card.journeys).to include({ :entry_station => nil , :exit_station => exit_station })
-      end
+      # it 'records incomplete journey in journey history' do
+      #   card.touch_out(exit_station)
+      #   expect(card.journeys).to include({ :entry_station => nil , :exit_station => exit_station })
+      # end
     end
 
   end

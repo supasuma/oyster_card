@@ -41,13 +41,13 @@ attr_reader :balance , :journey, :journeys
     if @journey == nil
       @journey = Journey.new(entry_station)
     else
-      journeys << @journey.finish_journey(nil)
+      journeys << @journey.finish(nil)
       finish
     end
   end
 
   def record_journey(exit_station)
-    journeys << @journey.finish_journey(exit_station)
+    journeys << @journey.finish(exit_station)
     finish
   end
 
